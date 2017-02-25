@@ -1,0 +1,208 @@
+<html>
+  <head>
+  <title>PROJECT [PUBLIC]_</title>
+
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+<style>
+#openAcresMap{
+  width: 1050px;
+  height: 600px;
+  float: right;
+  top: 120px;
+}
+</style>
+  </head>
+
+    <div id=content2>
+
+    <h1>PLAY BY EAR_ //</h1>
+
+    <br>
+
+    <p><b> Welcome! </b></p>
+    <p>PLAY BY EAR_ is a mapping project by Reina Imagawa, imagining a landscape where unused city-owned public spaces are transformed into music venues run by people in the neighborhood. Empty lots become reuseable spaces for cultural production and social interaction, always open to the public. </p>
+    <p><b>How this works: </b></p>
+    <p> 1. Select a date from the calendar to see what's-playing-where.</p>
+
+    <br>
+
+    <div id="datePickerDiv">
+      <p>Date: <input type="text" id="datepicker"></p>
+    </div>
+
+
+    <div id="buttonDiv"><input type="button" id="button" value="Choose" onClick="window.location.reload()">
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <p> 2. Zoom into the map and start exploring! Click on a marker to pull up more details. </p>
+    <br>
+    <p> 3. Found a venue you want to check out? Click and drag the Streetview icon to your destination. This involves a little bit of guessing.</p>
+
+
+  </div>
+
+    <div id="openAcresMap"></div>
+
+    </div>
+
+    <!-- <script src="scripts/jquery.min.js"></script>
+    <script src="main.js"></script>
+    <script src="space.js"></script> -->
+
+    <title>jQuery UI Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+    $( function() {
+      $( "#datepicker" ).datepicker();
+    } );
+    </script>
+
+
+    <!-- Google Maps API -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdHWkSh0jMYJz7hygNvWYAP92NjzSsAyA&extension=.js"></script>
+    <script>
+
+    var oaData = new Array();
+    var gData = new Array();
+    $.getJSON("/v1/spotifyGenres", function (spotifyGenres) {
+        //console.log(spotifyGenres);
+
+        for (var index=0; index < 900; index ++) {
+          gData.push(spotifyGenres[index]);
+        }
+        // for (var index=0; index < spotifyGenres.length; index ++) {
+        //   $("body").append(spotifyGenres[index].genre);
+        // }
+    }).done(function(){
+
+      $.getJSON("/v1/openAcres", function(openAcresData){
+          //console.log(openAcresData);
+
+          for (var index=0; index < 900; index ++) {
+            oaData.push(openAcresData[index]);
+            var randomIndex = Math.random() * (gData.length-1);
+            // console.log(randomIndex);
+
+            var html =  "<div class='row'><div>address</div><div>genre</div><div>link</div></div>";
+                //$("body").append(html);
+
+          //   $("body").append(openAcresData[index]["address line1"]); //changing the dot to square brackets and wrap it with quotes
+          //   $("body").append(spotifyGenres[Math.floor(randomIndex)].genre);
+           }
+
+      }).done(function(){
+
+                  google.maps.event.addDomListener(window, 'load', init);
+                      var map;
+                      function init() {
+
+
+                          var mapOptions = {
+                              center: new google.maps.LatLng(34.0522, -118.2437),
+                              zoom: 10,
+                              zoomControl: true,
+                              disableDoubleClickZoom: false,
+                              mapTypeControl: false,
+                              scaleControl: false,
+                              scrollwheel: true,
+                              panControl: false,
+                              streetViewControl: true,
+                              draggable : true,
+                              overviewMapControl: false,
+                              overviewMapControlOptions: {
+                                  opened: false,
+                              },
+                              mapTypeId: google.maps.MapTypeId.ROADMAP,
+                              styles: [{"featureType":"all","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"administrative.country","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.province","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.neighborhood","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.land_parcel","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"},{"visibility":"off"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"visibility":"on"},{"gamma":"0.00"}]},{"featureType":"landscape","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"landscape.man_made","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"landscape.natural.landcover","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"poi.attraction","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.business","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi.business","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.government","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.place_of_worship","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","elementType":"labels","stylers":[{"visibility":"off"},{"gamma":"1"},{"lightness":"0"}]},{"featureType":"poi.sports_complex","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":"100"},{"visibility":"on"},{"gamma":"1.0"}]},{"featureType":"road","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"visibility":"on"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.local","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.local","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#beecff"},{"visibility":"on"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"off"}]}],
+                          } // this is where you stick in the JS code to style the map
+
+
+
+
+                          var mapElement = document.getElementById('openAcresMap'); //change to id of element
+
+                          var map = new google.maps.Map(mapElement, mapOptions);
+
+
+
+                          var locations = [];
+
+
+                          for(var index=0; index< oaData.length; index ++){
+
+                            var random = Math.floor(Math.random() * (gData.length-1 - 0));
+
+                            var rule = ["There's salsa playing in the back room...","18 or younger/ Open till dawn/ Food trucks OK","BYOB/ Loitering is highly encouraged.","Cash and sneakers only/ Skateboards welcome.","Performers!! We got open mic all nite...","Pets allowed + more mural art wanted.", "Late night pool set/ No cover before 11", "Roof access today/ Keep it down after 12!", "Open till late/ There's pizza.", "Freestyle battle in any language.", "Shooting some videos but open to public.", "Try to find us/ we're pretty well hidden ;)", "We're open when everything else is closed.", "Leave your shit attitude somewhere else."];
+
+                            var randomRule = Math.floor(Math.random() * (rule.length-1 - 0));
+
+
+
+
+                            // var address = (oaData[index]["address line1"])? oaData[index]["address line1"] :  "discover me";
+
+                            locations[index] = [oaData[index].latitude, oaData[index].longitude, rule[randomRule], gData[random].genre ];
+
+                          }
+
+                            console.log(locations);
+
+                          for (index = 0; index < locations.length; index++) {
+
+                              addMarker(map, locations[index][0], locations[index][1], locations[index][3], locations[index][2]);
+
+                          }
+
+                              // google.maps.event.addListener(marker, 'click', function(){
+                              //   //do stuff
+                              // });
+
+
+                      }
+
+                      function addMarker(map, lat, long, genre, rule){
+
+                        var marker, infowindow;
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, long),
+                            map: map,
+                            title: genre
+                        });
+
+                        infowindow = new google.maps.InfoWindow({
+                          content: "Venue says: "+rule+"<br>Now playing: "+genre
+                        });
+                        marker.addListener('click', function(){
+                          infowindow.open(map, marker);
+                        });
+
+                      }
+
+
+
+                      // function gotoGoogs() {
+                      // 	window.open('https://www.google.com/maps/place/2635+Ashby+Ave,+Berkeley,+CA+94705/@37.856987,-122.2535017,15z/data=!4m2!3m1!1s0x80857dcdf0c6279b:0x35f679a3141dfee4','_blank');
+                      // }
+
+      });
+
+    });
+
+
+
+    </script>
+
+  </body>
+
+
+  </html>
